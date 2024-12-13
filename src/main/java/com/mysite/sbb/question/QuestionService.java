@@ -17,6 +17,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Service
 public class QuestionService {
+
     private final QuestionRepository questionRepository;
 
     public Page<Question> getList(int page) {
@@ -42,5 +43,16 @@ public class QuestionService {
         q.setCreateDate(LocalDateTime.now());
         q.setAuthor(user);
         this.questionRepository.save(q);
+    }
+
+    public void modify(Question question, String subject, String content) {
+        question.setSubject(subject);
+        question.setContent(content);
+        question.setModifyDate(LocalDateTime.now());
+        this.questionRepository.save(question);
+    }
+
+    public void delete(Question question) {
+        this.questionRepository.delete(question);
     }
 }
