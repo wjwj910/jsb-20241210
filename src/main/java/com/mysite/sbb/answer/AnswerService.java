@@ -7,12 +7,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -40,11 +37,15 @@ public class AnswerService {
         }
     }
 
-    public Page<Answer> getAnswers(Question question, Integer page) {
-        List<Sort.Order> sorts = new ArrayList<>();
-        sorts.add(Sort.Order.desc("createDate"));
-        Pageable pageable = PageRequest.of(page, 5, Sort.by(sorts));
-        return answerRepository.findAllByQuestion(question, pageable);
+    public Page<Answer> getAnswers(Question question, Integer page, String columName) {
+        Pageable pageable = PageRequest.of(page, 5);
+
+        if (columName.equals("createDate")) {
+            return answerRepository.findAllByQuestionOrderByCreateDateDesc(question, pageable);
+        } else if (columName.equals("voter")) {
+            return answerRepository.findAllWithVoterCountDesc(question, pageable);
+        }
+        return null;
     }
 
     public void modify(Answer answer, String content) {
