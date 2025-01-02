@@ -25,6 +25,7 @@ public class CommentController {
     private final QuestionService questionService;
     private final UserService userService;
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/create/question/{id}")
     public String createQuestionComment(@ModelAttribute CommentForm commentForm, @PathVariable Integer id, Principal principal) {
         Question question = questionService.getQuestion(commentForm.getQuestionId());
@@ -34,6 +35,7 @@ public class CommentController {
         return "redirect:/question/detail/%s".formatted(id);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/create/answer/{id}")
     public String createAnswerComment(@ModelAttribute CommentForm commentForm, @PathVariable Integer id, Principal principal) {
         Answer answer = answerService.getAnswer(commentForm.getAnswerId());
